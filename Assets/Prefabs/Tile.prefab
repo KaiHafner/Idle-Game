@@ -102,8 +102,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f3902494e20bf4b92d1bf462f634a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColour: {r: 0, g: 0, b: 0, a: 0}
+  baseColour: {r: 1, g: 1, b: 1, a: 0.019607844}
+  occupiedColor: {r: 1, g: 1, b: 1, a: 0.043137256}
   highlight: {fileID: 6996360815368888529}
+  isOccupied: 0
 --- !u!61 &6854056404387682515
 BoxCollider2D:
   m_ObjectHideFlags: 0

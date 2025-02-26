@@ -16,11 +16,26 @@ public class GameManager : MonoBehaviour
     float lastIncomeValue = 0;
 
     private Building buildingToPlace;
-
     [SerializeField] GameObject grid;
+    public CustomCursor customCursor;
+    public Tile[] tiles;
 
     private void Start()
     {
+        GridManager gridManager = UnityEngine.Object.FindFirstObjectByType<GridManager>(); // Get GridManager instance
+        if (gridManager != null)
+        {
+            gridManager.GenerateGrid();
+            tiles = gridManager.Tiles; // Assign tiles from GridManager
+            if (tiles == null || tiles.Length == 0)
+            {
+                Debug.LogError("Tiles array is empty in GridManager. Ensure tiles are generated correctly.");
+            }
+        }
+        else
+        {
+            Debug.LogError("GridManager not found in the scene.");
+        }
         UpdateUI();
     }
 
@@ -30,6 +45,31 @@ public class GameManager : MonoBehaviour
         {
             IdleCalculate();
             nextTimeCheck = Time.timeSinceLevelLoad + 1f / updatesPerSecond; 
+        }
+
+        if (Input.GetMouseButtonDown(0) && buildingToPlace != null) 
+        {
+            Tile nearestTile = null;
+            float nearestDistance = float.MaxValue;
+            foreach (Tile tile in tiles)
+            { 
+                float dist = Vector2.Distance(tile.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                if (dist < nearestDistance)
+                {
+                    nearestDistance = dist;
+                    nearestTile = tile;
+                }
+            }
+            if (nearestTile.isOccupied == false)
+            {
+                Instantiate(buildingToPlace, nearestTile.transform.position, Quaternion.identity);
+                buildingToPlace = null;
+                nearestTile.isOccupied = true;
+                grid.SetActive(false);
+                customCursor.gameObject.SetActive(false);
+                Cursor.visible = true;
+            }
+
         }
     }
 
@@ -74,6 +114,10 @@ public class GameManager : MonoBehaviour
     {
         if (count >= building.price)
         {
+            customCursor.gameObject.SetActive(true);
+            customCursor.GetComponent<SpriteRenderer>().sprite = building.GetComponent<SpriteRenderer>().sprite;    
+            Cursor.visible = false;
+
             count -= building.price;
             buildingToPlace = building;
             grid.SetActive(true);
