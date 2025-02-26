@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.LightTransport;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public float count = 0;
     float nextTimeCheck = 1;
     float lastIncomeValue = 0;
+
+    private Building buildingToPlace;
+
+    [SerializeField] GameObject grid;
 
     private void Start()
     {
@@ -63,5 +68,15 @@ public class GameManager : MonoBehaviour
     {
         countText.text = Mathf.RoundToInt(count).ToString();
         incomeText.text = lastIncomeValue.ToString() + "/s";
+    }
+
+    public void buyBuilding(Building building)
+    {
+        if (count >= building.price)
+        {
+            count -= building.price;
+            buildingToPlace = building;
+            grid.SetActive(true);
+        }
     }
 }
