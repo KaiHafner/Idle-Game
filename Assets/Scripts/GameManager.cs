@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     {
         count++;
         UpdateUI();
+        print("Clicked Rock/Clicker");
     }
 
     public Boolean PurchaseAction(int cost)

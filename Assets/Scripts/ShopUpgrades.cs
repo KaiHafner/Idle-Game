@@ -31,6 +31,7 @@ public class ShopUpgrades : MonoBehaviour
         {
             level++;
             updateUI();
+            print("Shop Item Bought");
         }
     }
 

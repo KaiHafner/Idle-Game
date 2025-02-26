@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MoveEnemy : MonoBehaviour
@@ -14,5 +15,10 @@ public class MoveEnemy : MonoBehaviour
     void Update()
     {
         transform.position = Vector2.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
+    }
+
+    private void OnMouseDown()
+    {
+        Destroy(gameObject);
     }
 }
