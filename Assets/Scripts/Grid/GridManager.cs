@@ -9,8 +9,8 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] GameObject gridHolder;
 
-    private List<Tile> tileList = new List<Tile>(); // Store references
-    public Tile[] Tiles { get; private set; } // Expose as an array
+    private List<Tile> tileList = new List<Tile>();
+    public Tile[] Tiles { get; private set; }
 
     public void GenerateGrid()
     {
@@ -23,15 +23,15 @@ public class GridManager : MonoBehaviour
                 float posY = y * -tileSize;
                 tile.transform.position = new Vector2(posX, posY);
 
-                Tile tileComponent = tile.GetComponent<Tile>(); // Get the Tile script
+                Tile tileComponent = tile.GetComponent<Tile>();
                 if (tileComponent != null)
                 {
-                    tileList.Add(tileComponent); // Store it
+                    tileList.Add(tileComponent);
                 }
             }
         }
 
-        Tiles = tileList.ToArray(); // Convert list to array
+        Tiles = tileList.ToArray();
 
         float gridLength = length * tileSize;
         float gridHeight = height * tileSize;

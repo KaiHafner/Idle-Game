@@ -22,21 +22,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        GridManager gridManager = UnityEngine.Object.FindFirstObjectByType<GridManager>(); // Get GridManager instance
-        if (gridManager != null)
-        {
-            gridManager.GenerateGrid();
-            tiles = gridManager.Tiles; // Assign tiles from GridManager
-            if (tiles == null || tiles.Length == 0)
-            {
-                Debug.LogError("Tiles array is empty in GridManager. Ensure tiles are generated correctly.");
-            }
-        }
-        else
-        {
-            Debug.LogError("GridManager not found in the scene.");
-        }
         UpdateUI();
+        Grid();
     }
 
     void Update()
@@ -47,30 +34,7 @@ public class GameManager : MonoBehaviour
             nextTimeCheck = Time.timeSinceLevelLoad + 1f / updatesPerSecond; 
         }
 
-        if (Input.GetMouseButtonDown(0) && buildingToPlace != null) 
-        {
-            Tile nearestTile = null;
-            float nearestDistance = float.MaxValue;
-            foreach (Tile tile in tiles)
-            { 
-                float dist = Vector2.Distance(tile.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                if (dist < nearestDistance)
-                {
-                    nearestDistance = dist;
-                    nearestTile = tile;
-                }
-            }
-            if (nearestTile.isOccupied == false)
-            {
-                Instantiate(buildingToPlace, nearestTile.transform.position, Quaternion.identity);
-                buildingToPlace = null;
-                nearestTile.isOccupied = true;
-                grid.SetActive(false);
-                customCursor.gameObject.SetActive(false);
-                Cursor.visible = true;
-            }
-
-        }
+        tilePlacement();
     }
 
     void IdleCalculate()
@@ -121,6 +85,62 @@ public class GameManager : MonoBehaviour
             count -= building.price;
             buildingToPlace = building;
             grid.SetActive(true);
+        }
+    }
+
+    public void Grid()
+    {
+        GridManager gridManager = UnityEngine.Object.FindFirstObjectByType<GridManager>(); // Get GridManager instance
+        if (gridManager != null)
+        {
+            gridManager.GenerateGrid();
+            tiles = gridManager.Tiles; // Assign tiles from GridManager
+            if (tiles == null || tiles.Length == 0)
+            {
+                Debug.LogError("Tiles array is empty in GridManager. Ensure tiles are generated correctly.");
+            }
+        }
+        else
+        {
+            Debug.LogError("GridManager not found in the scene.");
+        }
+    }
+
+    public void tilePlacement()
+    {
+        if (Input.GetMouseButtonDown(0) && buildingToPlace != null)
+        {
+            Tile nearestTile = null;
+            float nearestDistance = float.MaxValue;
+
+            foreach (Tile tile in tiles)
+            {
+                float dist = Vector2.Distance(tile.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                if (dist < nearestDistance)
+                {
+                    nearestDistance = dist;
+                    nearestTile = tile;
+                }
+            }
+
+            // Check if the nearestTile is occupied OR if there's an object in the specific layer
+            if (nearestTile != null && !nearestTile.isOccupied && !CheckForCollisions(nearestTile))
+            {
+                Instantiate(buildingToPlace, nearestTile.transform.position, Quaternion.identity);
+                buildingToPlace = null;
+                nearestTile.isOccupied = true;
+                grid.SetActive(false);
+                customCursor.gameObject.SetActive(false);
+                Cursor.visible = true;
+            }
+        }
+
+        bool CheckForCollisions(Tile tile)
+        {
+            float checkRadius = 0.5f;
+            int layerMask = LayerMask.GetMask("Default Obstacles");
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(tile.transform.position, checkRadius, layerMask);
+            return colliders.Length > 0;
         }
     }
 }

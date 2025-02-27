@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3893677700675958830}
   - component: {fileID: -3915888868008087462}
   - component: {fileID: 6854056404387682515}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColour: {r: 1, g: 1, b: 1, a: 0.019607844}
-  occupiedColor: {r: 1, g: 1, b: 1, a: 0.043137256}
+  occupiedColor: {r: 1, g: 0, b: 0, a: 0.043137256}
   highlight: {fileID: 6996360815368888529}
   isOccupied: 0
 --- !u!61 &6854056404387682515
@@ -162,7 +162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8610395762558607693}
   - component: {fileID: 2586342349486941420}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Highlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
