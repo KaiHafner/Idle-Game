@@ -40,6 +40,7 @@ public class CameraMovement : MonoBehaviour
     private void Update()
     {
         HandleKeyboardInput();
+        CentreCamera();
     }
 
     private void LateUpdate()
@@ -94,5 +95,13 @@ public class CameraMovement : MonoBehaviour
     private Vector3 GetMousePosition()
     {
         return _mainCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+    }
+
+    void CentreCamera()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            _mainCamera.transform.position = new Vector3(0, 0, -10);
+        }
     }
 }
